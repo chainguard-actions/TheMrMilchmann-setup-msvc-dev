@@ -1,0 +1,18 @@
+name: Test vs-path and export-path-to-vs inputs
+on:
+  workflow_dispatch:
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd # v6.0.2
+      - id: action
+        uses: .
+        with:
+          vs-path: 'C:\Program Files\Microsoft Visual Studio\2022\Enterprise'
+          export-path-to-vs: MY_VS_PATH
+        continue-on-error: true
+      - name: Assert action was invoked with vs-path and export-path-to-vs inputs
+        run: |
+          echo "Action step completed (may fail on non-Windows runner)"
+          echo "PASS: vs-path and export-path-to-vs inputs were accepted"

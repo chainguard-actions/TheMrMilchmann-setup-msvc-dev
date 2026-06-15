@@ -1,6 +1,11 @@
 {
   "owner": "TheMrMilchmann",
   "repo": "setup-msvc-dev",
-  "version": "",
-  "url": "https://github.com/TheMrMilchmann/setup-msvc-dev"
+  "version": "v3.0.2",
+  "commit_sha": "ced9887c29958f18f71b18c99d9eb0837859434c",
+  "url": "https://github.com/TheMrMilchmann/setup-msvc-dev",
+  "policy_sha": "d636be7e43ef829af6e853da6b3c7566db9f72fe",
+  "test_policy_sha": "843adf9e4b8f85d0c08b27b9d0b09dd094b54702",
+  "test_agent_version": "1",
+  "harden_agent_version": "1"
 }

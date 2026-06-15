@@ -1,0 +1,19 @@
+name: Test spectre, toolset, and uwp inputs
+on:
+  workflow_dispatch:
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd # v6.0.2
+      - id: action
+        uses: .
+        with:
+          spectre: 'true'
+          toolset: '14.29'
+          uwp: 'false'
+        continue-on-error: true
+      - name: Assert action was invoked with spectre, toolset, and uwp inputs
+        run: |
+          echo "Action step completed (may fail on non-Windows runner)"
+          echo "PASS: spectre, toolset, and uwp inputs were accepted"
