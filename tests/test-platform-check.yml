@@ -1,0 +1,28 @@
+name: Test platform check (non-Windows)
+on:
+  workflow_dispatch:
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd # v6.0.2
+
+      # The action only supports Windows. On Linux (act), it should fail with
+      # a clear error message indicating the platform is unsupported.
+      # We use continue-on-error so we can assert on the outcome.
+      - id: action
+        uses: .
+        with:
+          arch: x64
+        continue-on-error: true
+
+      - name: Assert action failed due to non-Windows platform
+        env:
+          OUTCOME: ${{ steps.action.outcome }}
+        run: |
+          echo "outcome: $OUTCOME"
+          if [ "$OUTCOME" != "failure" ]; then
+            echo "FAIL: expected action to fail on non-Windows platform, but outcome was '$OUTCOME'"
+            exit 1
+          fi
+          echo "PASS: action correctly failed on non-Windows platform"

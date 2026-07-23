@@ -1,0 +1,36 @@
+{
+  "name": "setup-msvc-dev",
+  "version": "4.1.0",
+  "private": true,
+  "type": "module",
+  "description": "",
+  "main": "dist/index.js",
+  "scripts": {
+    "build": "tsc --noEmit && ncc build -o dist src/setup-msvc-dev.ts"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/TheMrMilchmann/setup-msvc-dev.git"
+  },
+  "keywords": [
+    "actions",
+    "msvc",
+    "setup",
+    "vcvarsall"
+  ],
+  "author": "TheMrMilchmann",
+  "license": "MIT",
+  "dependencies": {
+    "@actions/core": "^3.0.0",
+    "@actions/github": "^9.0.0"
+  },
+  "devDependencies": {
+    "@types/node": "^24.3.0",
+    "@vercel/ncc": "^0.44.1",
+    "typescript": "^6.0.0"
+  },
+  "engines": {
+    "node": "24"
+  },
+  "packageManager": "yarn@4.17.1"
+}

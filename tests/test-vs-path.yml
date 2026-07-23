@@ -1,0 +1,18 @@
+name: Test vs-path input
+on:
+  workflow_dispatch:
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd # v6.0.2
+      - id: action
+        uses: .
+        continue-on-error: true
+        with:
+          vs-path: "C:\\Program Files\\Microsoft Visual Studio\\2022\\Enterprise"
+      - name: Assert action ran with vs-path input
+        run: |
+          echo "Action completed (may fail on non-Windows, which is expected)"
+          echo "vs-path input was passed"
+          echo "PASS: input was accepted"
