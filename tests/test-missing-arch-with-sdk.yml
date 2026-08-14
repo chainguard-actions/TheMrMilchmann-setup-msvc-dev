@@ -1,4 +1,4 @@
-name: Test export path inputs
+name: Test missing arch with sdk input
 on:
   workflow_dispatch:
 jobs:
@@ -9,16 +9,15 @@ jobs:
       - id: action
         uses: .
         with:
-          export-path-to-vcvarsall: VCVARSALL_PATH
-          export-path-to-vs: VS_INSTALL_PATH
+          sdk: '10.0.19041.0'
         continue-on-error: true
-      - name: Assert action failed on non-Windows
+      - name: Assert action failed
         env:
           OUTCOME: ${{ steps.action.outcome }}
         run: |
           echo "outcome: $OUTCOME"
           if [ "$OUTCOME" != "failure" ]; then
-            echo "FAIL: expected action to fail on non-Windows platform, but outcome was '$OUTCOME'"
+            echo "FAIL: expected action to fail when sdk is specified without arch, but outcome was '$OUTCOME'"
             exit 1
           fi
-          echo "PASS: action correctly failed on non-Windows platform even with export-path inputs"
+          echo "PASS: action correctly failed when sdk specified without arch (or on non-Windows)"

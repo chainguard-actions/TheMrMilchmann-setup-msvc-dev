@@ -1,4 +1,4 @@
-name: Test export path inputs
+name: Test vs-path input
 on:
   workflow_dispatch:
 jobs:
@@ -9,10 +9,9 @@ jobs:
       - id: action
         uses: .
         with:
-          export-path-to-vcvarsall: VCVARSALL_PATH
-          export-path-to-vs: VS_INSTALL_PATH
+          vs-path: "C:\\Program Files\\Microsoft Visual Studio\\2022\\Enterprise"
         continue-on-error: true
-      - name: Assert action failed on non-Windows
+      - name: Assert action failed on non-Windows platform
         env:
           OUTCOME: ${{ steps.action.outcome }}
         run: |
@@ -21,4 +20,4 @@ jobs:
             echo "FAIL: expected action to fail on non-Windows platform, but outcome was '$OUTCOME'"
             exit 1
           fi
-          echo "PASS: action correctly failed on non-Windows platform even with export-path inputs"
+          echo "PASS: action correctly failed on non-Windows platform with vs-path input"

@@ -1,17 +1,19 @@
-name: Test basic usage (default arch)
+name: Test basic usage (no inputs)
 on:
   workflow_dispatch:
 jobs:
   test:
-    runs-on: ubuntu-latest
+    runs-on: windows-latest
     steps:
       - uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd # v6.0.2
       - id: action
         uses: .
-        with:
-          arch: x64
-        continue-on-error: true
-      - name: Assert action ran
+      - name: Assert MSVC tools are available
+        shell: cmd
         run: |
-          echo "Action completed (may fail on non-Windows runner)"
-          echo "PASS"
+          cl.exe /? 2>&1 | findstr /i "Microsoft" >nul
+          if errorlevel 1 (
+            echo FAIL: cl.exe not found or not MSVC
+            exit /b 1
+          )
+          echo PASS: cl.exe is available

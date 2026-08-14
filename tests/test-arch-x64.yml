@@ -1,0 +1,30 @@
+name: Test with arch x64
+on:
+  workflow_dispatch:
+jobs:
+  test:
+    runs-on: windows-latest
+    steps:
+      - uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd # v6.0.2
+      - id: action
+        uses: .
+        with:
+          arch: x64
+      - name: Assert MSVC tools are available for x64
+        shell: cmd
+        run: |
+          cl.exe /? 2>&1 | findstr /i "Microsoft" >nul
+          if errorlevel 1 (
+            echo FAIL: cl.exe not found or not MSVC
+            exit /b 1
+          )
+          echo PASS: cl.exe is available for x64
+      - name: Assert x64 target architecture
+        shell: cmd
+        run: |
+          cl.exe /? 2>&1 | findstr /i "x64\|AMD64\|for x64" >nul
+          if errorlevel 1 (
+            echo FAIL: x64 architecture not detected in cl.exe output
+            exit /b 1
+          )
+          echo PASS: x64 architecture confirmed
