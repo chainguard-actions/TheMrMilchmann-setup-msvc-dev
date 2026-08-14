@@ -1,0 +1,27 @@
+name: Test basic usage (no inputs)
+on:
+  workflow_dispatch:
+jobs:
+  test:
+    runs-on: windows-latest
+    steps:
+      - uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd # v6.0.2
+      - id: action
+        uses: .
+      - name: Assert MSVC tools are available
+        shell: cmd
+        run: |
+          where cl.exe
+          if %ERRORLEVEL% neq 0 (
+            echo FAIL: cl.exe not found on PATH
+            exit /b 1
+          )
+          echo PASS: cl.exe found
+      - name: Assert MSVC environment variables are set
+        shell: cmd
+        run: |
+          if "%VCINSTALLDIR%"=="" (
+            echo FAIL: VCINSTALLDIR is not set
+            exit /b 1
+          )
+          echo PASS: VCINSTALLDIR=%VCINSTALLDIR%

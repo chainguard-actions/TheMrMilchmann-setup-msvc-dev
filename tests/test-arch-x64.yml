@@ -1,0 +1,30 @@
+name: Test with arch x64
+on:
+  workflow_dispatch:
+jobs:
+  test:
+    runs-on: windows-latest
+    steps:
+      - uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd # v6.0.2
+      - id: action
+        uses: .
+        with:
+          arch: x64
+      - name: Assert cl.exe is available for x64
+        shell: cmd
+        run: |
+          where cl.exe
+          if %ERRORLEVEL% neq 0 (
+            echo FAIL: cl.exe not found on PATH
+            exit /b 1
+          )
+          echo PASS: cl.exe found
+      - name: Assert VSCMD_ARG_TGT_ARCH is x64
+        shell: cmd
+        run: |
+          echo VSCMD_ARG_TGT_ARCH=%VSCMD_ARG_TGT_ARCH%
+          if "%VSCMD_ARG_TGT_ARCH%" neq "x64" (
+            echo FAIL: expected VSCMD_ARG_TGT_ARCH=x64 but got %VSCMD_ARG_TGT_ARCH%
+            exit /b 1
+          )
+          echo PASS: VSCMD_ARG_TGT_ARCH=x64

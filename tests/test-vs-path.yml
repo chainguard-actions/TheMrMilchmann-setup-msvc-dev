@@ -1,18 +1,31 @@
-name: Test vs-path and export-path-to-vs inputs
+name: Test vs-path input
 on:
   workflow_dispatch:
 jobs:
   test:
-    runs-on: ubuntu-latest
+    runs-on: windows-latest
     steps:
       - uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd # v6.0.2
+      - name: Find VS installation path
+        id: find-vs
+        shell: pwsh
+        run: |
+          $vsPath = & "${env:ProgramFiles(x86)}\Microsoft Visual Studio\Installer\vswhere.exe" -latest -property installationPath
+          if (-not $vsPath) {
+            Write-Error "Could not find Visual Studio installation"
+            exit 1
+          }
+          echo "vs-path=$vsPath" >> $env:GITHUB_OUTPUT
       - id: action
         uses: .
         with:
-          vs-path: 'C:\Program Files\Microsoft Visual Studio\2022\Enterprise'
-          export-path-to-vs: MY_VS_PATH
-        continue-on-error: true
-      - name: Assert action was invoked with vs-path and export-path-to-vs inputs
+          vs-path: ${{ steps.find-vs.outputs.vs-path }}
+      - name: Assert cl.exe is available
+        shell: cmd
         run: |
-          echo "Action step completed (may fail on non-Windows runner)"
-          echo "PASS: vs-path and export-path-to-vs inputs were accepted"
+          where cl.exe
+          if %ERRORLEVEL% NEQ 0 (
+            echo FAIL: cl.exe not found on PATH
+            exit /b 1
+          )
+          echo PASS

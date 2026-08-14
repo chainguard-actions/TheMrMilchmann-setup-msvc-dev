@@ -1,0 +1,40 @@
+name: Test export-path-to-vcvarsall and export-path-to-vs inputs
+on:
+  workflow_dispatch:
+jobs:
+  test:
+    runs-on: windows-latest
+    steps:
+      - uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd # v6.0.2
+      - id: action
+        uses: .
+        with:
+          arch: x64
+          export-path-to-vcvarsall: MY_VCVARSALL_PATH
+          export-path-to-vs: MY_VS_PATH
+      - name: Assert MY_VCVARSALL_PATH is set and points to vcvarsall.bat
+        shell: cmd
+        run: |
+          echo MY_VCVARSALL_PATH=%MY_VCVARSALL_PATH%
+          if "%MY_VCVARSALL_PATH%"=="" (
+            echo FAIL: MY_VCVARSALL_PATH is not set
+            exit /b 1
+          )
+          if not exist "%MY_VCVARSALL_PATH%" (
+            echo FAIL: vcvarsall.bat not found at %MY_VCVARSALL_PATH%
+            exit /b 1
+          )
+          echo PASS: MY_VCVARSALL_PATH=%MY_VCVARSALL_PATH%
+      - name: Assert MY_VS_PATH is set and is a valid directory
+        shell: cmd
+        run: |
+          echo MY_VS_PATH=%MY_VS_PATH%
+          if "%MY_VS_PATH%"=="" (
+            echo FAIL: MY_VS_PATH is not set
+            exit /b 1
+          )
+          if not exist "%MY_VS_PATH%\" (
+            echo FAIL: Visual Studio directory not found at %MY_VS_PATH%
+            exit /b 1
+          )
+          echo PASS: MY_VS_PATH=%MY_VS_PATH%
