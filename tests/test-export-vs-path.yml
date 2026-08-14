@@ -1,0 +1,25 @@
+name: Test export-path-to-vs
+on:
+  workflow_dispatch:
+jobs:
+  test:
+    runs-on: windows-latest
+    steps:
+      - uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd # v6.0.2
+      - id: action
+        uses: .
+        with:
+          export-path-to-vs: VS_INSTALL_PATH
+      - name: Assert VS_INSTALL_PATH is set
+        shell: cmd
+        run: |
+          echo VS_INSTALL_PATH=%VS_INSTALL_PATH%
+          if "%VS_INSTALL_PATH%"=="" (
+            echo FAIL: VS_INSTALL_PATH environment variable is not set
+            exit /b 1
+          )
+          if not exist "%VS_INSTALL_PATH%" (
+            echo FAIL: Visual Studio installation not found at %VS_INSTALL_PATH%
+            exit /b 1
+          )
+          echo PASS: Visual Studio installation found at %VS_INSTALL_PATH%

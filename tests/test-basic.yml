@@ -1,18 +1,19 @@
-name: Test basic usage with arch
+name: Test basic MSVC setup
 on:
   workflow_dispatch:
 jobs:
   test:
-    runs-on: ubuntu-latest
+    runs-on: windows-latest
     steps:
       - uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd # v6.0.2
       - id: action
         uses: .
-        with:
-          arch: x64
-          export-path-to-vs: VS_PATH
-        continue-on-error: true
-      - name: Assert action ran
+      - name: Assert MSVC environment is set up
+        shell: cmd
         run: |
-          echo "Action completed (may fail on non-Windows runner)"
-          echo "PASS"
+          where cl.exe
+          if %ERRORLEVEL% neq 0 (
+            echo FAIL: cl.exe not found in PATH
+            exit /b 1
+          )
+          echo PASS: cl.exe found in PATH

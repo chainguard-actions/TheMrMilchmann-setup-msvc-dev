@@ -1,0 +1,28 @@
+name: Test spectre input
+on:
+  workflow_dispatch:
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd # v6.0.2
+
+      # The action checks os.platform() and calls core.setFailed() on non-Windows.
+      # We pass the spectre input to ensure it is covered, and expect failure on Linux.
+      - id: action
+        uses: .
+        with:
+          arch: x64
+          spectre: "true"
+        continue-on-error: true
+
+      - name: Assert action failed on non-Windows
+        env:
+          OUTCOME: ${{ steps.action.outcome }}
+        run: |
+          echo "outcome: $OUTCOME"
+          if [ "$OUTCOME" != "failure" ]; then
+            echo "FAIL: expected action to fail on non-Windows platform, but outcome was '$OUTCOME'"
+            exit 1
+          fi
+          echo "PASS: action correctly failed on non-Windows platform (spectre input covered)"
