@@ -1,0 +1,30 @@
+name: Test arch x64
+on:
+  workflow_dispatch:
+jobs:
+  test:
+    runs-on: windows-latest
+    steps:
+      - uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd # v6.0.2
+      - id: action
+        uses: .
+        with:
+          arch: x64
+      - name: Assert cl.exe targets x64
+        shell: cmd
+        run: |
+          cl.exe 2>&1 | findstr /i "x64" >nul
+          if errorlevel 1 (
+            echo FAIL: cl.exe does not appear to target x64
+            exit /b 1
+          )
+          echo PASS: cl.exe targets x64
+      - name: Assert VSCMD_ARG_TGT_ARCH is x64
+        shell: cmd
+        run: |
+          echo VSCMD_ARG_TGT_ARCH=%VSCMD_ARG_TGT_ARCH%
+          if not "%VSCMD_ARG_TGT_ARCH%"=="x64" (
+            echo FAIL: expected VSCMD_ARG_TGT_ARCH=x64 but got %VSCMD_ARG_TGT_ARCH%
+            exit /b 1
+          )
+          echo PASS: VSCMD_ARG_TGT_ARCH is x64

@@ -1,0 +1,27 @@
+name: Test arch required when using sdk/spectre/toolset/uwp
+on:
+  workflow_dispatch:
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd # v6.0.2
+
+      # Providing sdk without arch should cause a failure.
+      # On Linux the platform check fires first, but the action still fails.
+      - id: action
+        uses: .
+        with:
+          sdk: "10.0.19041.0"
+        continue-on-error: true
+
+      - name: Assert action failed when sdk provided without arch
+        env:
+          OUTCOME: ${{ steps.action.outcome }}
+        run: |
+          echo "outcome: $OUTCOME"
+          if [ "$OUTCOME" != "failure" ]; then
+            echo "FAIL: expected action to fail when sdk provided without arch, but outcome was '$OUTCOME'"
+            exit 1
+          fi
+          echo "PASS: action correctly failed when sdk provided without arch"

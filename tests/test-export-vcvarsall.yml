@@ -1,0 +1,29 @@
+name: Test export-path-to-vcvarsall
+on:
+  workflow_dispatch:
+jobs:
+  test:
+    runs-on: windows-latest
+    steps:
+      - uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd # v6.0.2
+      - id: action
+        uses: .
+        with:
+          export-path-to-vcvarsall: VCVARSALL_PATH
+      - name: Assert VCVARSALL_PATH is set
+        shell: cmd
+        run: |
+          echo VCVARSALL_PATH=%VCVARSALL_PATH%
+          if "%VCVARSALL_PATH%"=="" (
+            echo FAIL: VCVARSALL_PATH is not set
+            exit /b 1
+          )
+          echo PASS: VCVARSALL_PATH is set to %VCVARSALL_PATH%
+      - name: Assert vcvarsall.bat exists at the exported path
+        shell: cmd
+        run: |
+          if not exist "%VCVARSALL_PATH%" (
+            echo FAIL: vcvarsall.bat not found at %VCVARSALL_PATH%
+            exit /b 1
+          )
+          echo PASS: vcvarsall.bat found at %VCVARSALL_PATH%
