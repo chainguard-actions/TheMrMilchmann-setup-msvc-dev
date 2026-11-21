@@ -13,6 +13,7 @@ Hardened by [Chainguard](https://www.chainguard.dev) from the upstream action at
 | v3.0.2 | [`v3.0.2`](https://github.com/chainguard-actions/TheMrMilchmann-setup-msvc-dev/tree/v3.0.2) | [`ced9887`](https://github.com/TheMrMilchmann/setup-msvc-dev/commit/ced9887c29958f18f71b18c99d9eb0837859434c) | [`HARDENING.md`](https://github.com/chainguard-actions/TheMrMilchmann-setup-msvc-dev/blob/v3.0.2/HARDENING.md) |
 | v4.0.0 | [`v4.0.0`](https://github.com/chainguard-actions/TheMrMilchmann-setup-msvc-dev/tree/v4.0.0) | [`79dac24`](https://github.com/TheMrMilchmann/setup-msvc-dev/commit/79dac248aac9d0059f86eae9d8b5bfab4e95e97c) | [`HARDENING.md`](https://github.com/chainguard-actions/TheMrMilchmann-setup-msvc-dev/blob/v4.0.0/HARDENING.md) |
 | v4.1.0 | [`v4.1.0`](https://github.com/chainguard-actions/TheMrMilchmann-setup-msvc-dev/tree/v4.1.0) | [`368ef7d`](https://github.com/TheMrMilchmann/setup-msvc-dev/commit/368ef7d1ee4d1171b31d4a7f67f4d954f903f5a9) | [`HARDENING.md`](https://github.com/chainguard-actions/TheMrMilchmann-setup-msvc-dev/blob/v4.1.0/HARDENING.md) |
+| v4.1.1 | [`v4.1.1`](https://github.com/chainguard-actions/TheMrMilchmann-setup-msvc-dev/tree/v4.1.1) | [`b014284`](https://github.com/TheMrMilchmann/setup-msvc-dev/commit/b01428496a7be6ea8716337c299ffccc9fadc0c8) | [`HARDENING.md`](https://github.com/chainguard-actions/TheMrMilchmann-setup-msvc-dev/blob/v4.1.1/HARDENING.md) |
 
 ## Privacy
 
