@@ -1,18 +1,101 @@
-# TheMrMilchmann/setup-msvc-dev
+# setup-msvc-dev
 
-Sets up a Microsoft Visual C++ tools for command-line usage
+[![License](https://img.shields.io/badge/license-MIT-green.svg?style=for-the-badge&label=License)](https://github.com/TheMrMilchmann/setup-msvc-dev/blob/master/LICENSE)
 
-Hardened by [Chainguard](https://www.chainguard.dev) from the upstream action at [https://github.com/TheMrMilchmann/setup-msvc-dev](https://github.com/TheMrMilchmann/setup-msvc-dev).
+A [GitHub Action](https://github.com/features/actions) to set up a Developer
+Command Prompt for Microsoft Visual C++.
 
-## Versions
+This project was forked from https://github.com/ilammy/msvc-dev-cmd to support
+additional use-cases and to experiment further with GitHub Actions.
 
-| Version | Tag | Upstream commit | Hardening report |
-|---------|-----|-----------------|------------------|
-| v2.0.2 | [`v2.0.2`](https://github.com/chainguard-actions/TheMrMilchmann-setup-msvc-dev/tree/v2.0.2) | [`3cc4909`](https://github.com/TheMrMilchmann/setup-msvc-dev/commit/3cc490970305750dc49f92cfc3a5543976a1d2cc) | [`HARDENING.md`](https://github.com/chainguard-actions/TheMrMilchmann-setup-msvc-dev/blob/v2.0.2/HARDENING.md) |
-| v3.0.1 | [`v3.0.1`](https://github.com/chainguard-actions/TheMrMilchmann-setup-msvc-dev/tree/v3.0.1) | [`fb19abb`](https://github.com/TheMrMilchmann/setup-msvc-dev/commit/fb19abb8a41b3cf0340f5d1be17d420309232be6) | [`HARDENING.md`](https://github.com/chainguard-actions/TheMrMilchmann-setup-msvc-dev/blob/v3.0.1/HARDENING.md) |
-| v3.0.2 | [`v3.0.2`](https://github.com/chainguard-actions/TheMrMilchmann-setup-msvc-dev/tree/v3.0.2) | [`ced9887`](https://github.com/TheMrMilchmann/setup-msvc-dev/commit/ced9887c29958f18f71b18c99d9eb0837859434c) | [`HARDENING.md`](https://github.com/chainguard-actions/TheMrMilchmann-setup-msvc-dev/blob/v3.0.2/HARDENING.md) |
-| v4.0.0 | [`v4.0.0`](https://github.com/chainguard-actions/TheMrMilchmann-setup-msvc-dev/tree/v4.0.0) | [`79dac24`](https://github.com/TheMrMilchmann/setup-msvc-dev/commit/79dac248aac9d0059f86eae9d8b5bfab4e95e97c) | [`HARDENING.md`](https://github.com/chainguard-actions/TheMrMilchmann-setup-msvc-dev/blob/v4.0.0/HARDENING.md) |
-| v4.1.0 | [`v4.1.0`](https://github.com/chainguard-actions/TheMrMilchmann-setup-msvc-dev/tree/v4.1.0) | [`368ef7d`](https://github.com/TheMrMilchmann/setup-msvc-dev/commit/368ef7d1ee4d1171b31d4a7f67f4d954f903f5a9) | [`HARDENING.md`](https://github.com/chainguard-actions/TheMrMilchmann-setup-msvc-dev/blob/v4.1.0/HARDENING.md) |
+## Usage
+
+### Basic Usage
+
+```yaml
+steps:
+  - uses: TheMrMilchmann/setup-msvc-dev@v4
+    with:
+      arch: x64
+```
+
+### Inputs
+
+- `arch` – target architecture (required if at least one is set: `sdk`,
+           `toolset`, `uwp`, `spectre`)
+  - native compilation:
+    - `x64`
+    - `x86`
+  - cross-compilation: `x86_amd64`, `x86_arm`, `x86_arm64`, `amd64_x86`,
+    `amd64_arm`, `amd64_arm64`
+  - Check [the Microsoft documentation](https://docs.microsoft.com/en-us/cpp/build/building-on-the-command-line)
+    for all possible options
+- `vs-path` – the path to the Visual Studio installation
+  - do not specify to use the latest installation
+- `sdk` – Windows SDK to use
+  - do not specify to use the default SDK
+  - or specify full Windows 10 SDK number (e.g. `10.0.10240.0`)
+  - or write `8.1` to use Windows 8.1 SDK
+- `toolset` – select a VC++ compiler toolset
+  - do not specify to use the default toolset
+  - `14.0` for VC++ 2015 Compiler Toolset
+  - `14.XX` for the latest 14.XX toolset installed (e.g. `14.11`)
+  - `14.XX.YYYY` for a specific full version number (e.g. `14.11.25503`)
+- `uwp` – set to `true` to build for Universal Windows Platform (i.e., for Windows Store)
+- `spectre` – set to `true` to use Visual Studio libraries with spectre mitigations
+- `export-path-to-vcvarsall` – the environment variable to store the path to
+                               vcvarsall.bat in
+- `export-path-to-vs` – the environment variable to store the path to the Visual 
+                        Studio installation in
+
+
+### Versioning
+
+This action is strictly following [SemVer 2.0.0](https://semver.org/spec/v2.0.0.html).
+Thus, it is recommended to pin the action against specific MAJOR version. This
+can be achieved by using the `v${MAJOR}` branch.
+
+To get an overview about the action's versions, see the [changelog](docs/changelog/README.md).
+
+
+## Name conflicts with `shell: bash`
+
+Using `shell: bash` in Actions may shadow some of the paths added by MSVC. In particular, `link.exe` (Microsoft C
+linker) is prone to be shadowed by `/usr/bin/link` (GNU filesystem link tool).
+
+Unfortunately, this happens because GitHub Actions unconditionally *prepend* GNU paths when `shell: bash` is used, on
+top of any paths set by `setup-msvc-dev`, every time at the start of each new step. Hence, there aren't many
+non-destructive options here.
+
+If you experience compilation errors where `link` complains about unreasonable command-line arguments, “extra operand
+*something-something*” – that's probably it. Recommended workaround is to remove `/usr/bin/link` if that interferes with
+your builds.
+
+
+## License
+
+```
+Copyright (c) 2019 ilammy
+Copyright (c) 2021-2026 Leon Linhart
+
+Permission is hereby granted, free of charge, to any person obtaining a copy
+of this software and associated documentation files (the "Software"), to deal
+in the Software without restriction, including without limitation the rights
+to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+copies of the Software, and to permit persons to whom the Software is
+furnished to do so, subject to the following conditions:
+
+The above copyright notice and this permission notice shall be included in all
+copies or substantial portions of the Software.
+
+THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
+SOFTWARE.
+```
 
 ## Privacy
 
